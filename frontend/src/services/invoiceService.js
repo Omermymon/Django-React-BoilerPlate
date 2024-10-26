@@ -25,7 +25,7 @@ export const payInvoice = async (invoiceId, paymentAmount) => {
 };
 
 export const addInvoice = async (invoiceData) => {
-  const response = await fetch(API_URL, {
+  const response = await fetch(`${API_URL}create_invoice/`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
