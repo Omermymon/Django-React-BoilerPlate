@@ -1,24 +1,27 @@
 import React from "react";
 import InvoiceItem from "./InvoiceItem";
+import { Box, Typography, List, ListItem, Paper } from "@mui/material";
 
 const InvoiceList = ({ invoices, onPayment }) => {
-  // Add onPayment here
   return (
-    <div>
+    <Box mt={2} p={2} component={Paper} elevation={3}>
       {invoices.length === 0 ? (
-        <p>No invoices available.</p>
+        <Typography variant="h6" align="center" color="textSecondary">
+          No invoices available.
+        </Typography>
       ) : (
-        <ul>
+        <List>
           {invoices.map((invoice) => (
-            <InvoiceItem
-              key={invoice.reference}
-              invoice={invoice}
-              onPayment={onPayment} // Pass onPayment down to InvoiceItem
-            />
+            <ListItem key={invoice.reference} divider>
+              <InvoiceItem
+                invoice={invoice}
+                onPayment={onPayment} // Pass onPayment down to InvoiceItem
+              />
+            </ListItem>
           ))}
-        </ul>
+        </List>
       )}
-    </div>
+    </Box>
   );
 };
 

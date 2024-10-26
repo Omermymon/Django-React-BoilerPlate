@@ -1,21 +1,19 @@
 import { useState, useEffect } from "react";
-import "./App.css";
 import InvoiceList from "./components/InvoiceList";
+import AddInvoiceForm from "./components/AddInvoiceForm";
+import ErrorDialog from "./components/ErrorAlert";
+import InvoiceSelector from "./components/InvoiceSelector"; // Import the new component
 import {
   fetchInvoices,
   payInvoice,
   addInvoice,
 } from "./services/invoiceService";
+import { Container, Typography, Paper, Box } from "@mui/material";
 
 function App() {
   const [invoices, setInvoices] = useState([]);
-  const [newInvoice, setNewInvoice] = useState({
-    reference: "",
-    amount: "",
-    paid_amount: 0,
-    status: "NOT_PAID",
-    due_date: "",
-  });
+  const [selectedInvoice, setSelectedInvoice] = useState("");
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const loadInvoices = async () => {
@@ -23,14 +21,31 @@ function App() {
         const data = await fetchInvoices();
         setInvoices(data);
       } catch (error) {
-        console.error("Error fetching invoices:", error);
+        setError("Error fetching invoices.");
       }
     };
-
     loadInvoices();
   }, []);
 
   const handlePayment = async (invoiceId, paymentAmount) => {
+    setError(null);
+    const invoice = invoices.find((inv) => inv.id === invoiceId);
+
+    if (!invoice) {
+      setError("Invoice not found.");
+      return;
+    }
+
+    if (isNaN(paymentAmount) || paymentAmount <= 0) {
+      setError("Payment amount must be a positive number.");
+      return;
+    }
+
+    if (paymentAmount > invoice.amount - invoice.paid_amount) {
+      setError("Payment amount exceeds remaining balance.");
+      return;
+    }
+
     try {
       const updatedInvoice = await payInvoice(invoiceId, paymentAmount);
       setInvoices((prevInvoices) =>
@@ -39,62 +54,57 @@ function App() {
         )
       );
     } catch (error) {
-      console.error("Error processing payment:", error);
+      setError("Failed to process payment.");
     }
   };
 
-  const handleAddInvoice = async (e) => {
-    e.preventDefault();
+  const handleAddInvoice = async (newInvoice) => {
+    setError(null);
+
+    if (isNaN(newInvoice.amount) || newInvoice.amount <= 0) {
+      setError("Invoice amount must be a positive number.");
+      return;
+    }
+
     try {
       const invoice = await addInvoice(newInvoice);
       setInvoices((prevInvoices) => [...prevInvoices, invoice]);
-      setNewInvoice({
-        reference: "",
-        amount: "",
-        paid_amount: 0,
-        status: "NOT_PAID",
-        due_date: "",
-      });
     } catch (error) {
-      console.error("Error adding invoice:", error);
+      setError("Failed to add invoice.");
     }
   };
 
+  const handleCloseError = () => setError(null);
+
   return (
-    <div className="App">
-      <h1>Invoices</h1>
+    <Container maxWidth="md">
+      <Typography variant="h4" align="center" gutterBottom>
+        Invoice Manager
+      </Typography>
+
+      <ErrorDialog
+        open={Boolean(error)}
+        message={error}
+        onClose={handleCloseError}
+      />
+
+      <Paper elevation={3} sx={{ p: 3, mt: 4 }}>
+        <Box display="flex" flexDirection="row" justifyContent="space-between">
+          <div style={{ flex: 1, marginRight: "16px" }}>
+            <AddInvoiceForm onAddInvoice={handleAddInvoice} />
+          </div>
+          <div style={{ flex: 1 }}>
+            <InvoiceSelector
+              invoices={invoices}
+              selectedInvoice={selectedInvoice}
+              onSelect={setSelectedInvoice}
+              onPayment={handlePayment} // Pass the payment handler
+            />
+          </div>
+        </Box>
+      </Paper>
       <InvoiceList invoices={invoices} onPayment={handlePayment} />
-      <form onSubmit={handleAddInvoice}>
-        <h2>Add New Invoice</h2>
-        <input
-          type="text"
-          value={newInvoice.reference}
-          onChange={(e) =>
-            setNewInvoice({ ...newInvoice, reference: e.target.value })
-          }
-          placeholder="Reference"
-          required
-        />
-        <input
-          type="number"
-          value={newInvoice.amount}
-          onChange={(e) =>
-            setNewInvoice({ ...newInvoice, amount: e.target.value })
-          }
-          placeholder="Amount"
-          required
-        />
-        <input
-          type="date"
-          value={newInvoice.due_date}
-          onChange={(e) =>
-            setNewInvoice({ ...newInvoice, due_date: e.target.value })
-          }
-          required
-        />
-        <button type="submit">Add Invoice</button>
-      </form>
-    </div>
+    </Container>
   );
 }
 
