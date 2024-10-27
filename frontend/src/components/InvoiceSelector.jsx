@@ -7,7 +7,7 @@ import {
   Typography,
   Box,
 } from "@mui/material";
-import InvoiceItem from "./InvoiceItem"; // Import the InvoiceItem component
+import InvoiceItem from "./InvoiceItem";
 
 const InvoiceSelector = ({
   invoices,
@@ -37,8 +37,6 @@ const InvoiceSelector = ({
           ))}
         </Select>
       </FormControl>
-
-      {/* Display selected invoice details using InvoiceItem */}
       {selectedInvoice && invoice && (
         <Box sx={{ mt: 2 }}>
           <InvoiceItem invoice={invoice} onPayment={onPayment} />

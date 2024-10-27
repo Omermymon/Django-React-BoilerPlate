@@ -16,7 +16,9 @@ function AddInvoiceForm({ onAddInvoice }) {
 
   return (
     <Box sx={{ mb: 4 }} component="form" onSubmit={handleSubmit}>
-      <Typography variant="h6">Add New Invoice</Typography>
+      <Typography variant="h6" mb={1}>
+        Add New Invoice
+      </Typography>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
           <TextField

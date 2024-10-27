@@ -9,5 +9,5 @@ class InvoiceSerializer(serializers.ModelSerializer):
 class CreateInvoiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Invoice
-        fields = ['reference', 'amount', 'paid_amount', 'status', 'due_date']  # Include the necessary fields
-        read_only_fields = ['paid_amount', 'status']  # Set these fields as read-only
+        fields = ['reference', 'amount', 'paid_amount', 'status', 'due_date']  
+        read_only_fields = ['paid_amount', 'status']  

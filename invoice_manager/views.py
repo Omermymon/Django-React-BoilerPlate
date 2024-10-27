@@ -41,7 +41,7 @@ class InvoiceViewSet(viewsets.ModelViewSet):
     def create_invoice(self, request):
         serializer = CreateInvoiceSerializer(data=request.data)
         if serializer.is_valid():
-            invoice = serializer.save()  # Save the new invoice
+            invoice = serializer.save()  
             return Response(InvoiceSerializer(invoice).data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

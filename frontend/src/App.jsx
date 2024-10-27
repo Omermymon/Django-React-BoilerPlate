@@ -2,13 +2,22 @@ import { useState, useEffect } from "react";
 import InvoiceList from "./components/InvoiceList";
 import AddInvoiceForm from "./components/AddInvoiceForm";
 import ErrorDialog from "./components/ErrorAlert";
-import InvoiceSelector from "./components/InvoiceSelector"; // Import the new component
+import InvoiceSelector from "./components/InvoiceSelector";
 import {
   fetchInvoices,
   payInvoice,
   addInvoice,
 } from "./services/invoiceService";
-import { Container, Typography, Paper, Box } from "@mui/material";
+import {
+  AppBar,
+  Toolbar,
+  Container,
+  Typography,
+  Paper,
+  Box,
+} from "@mui/material";
+import PaymentsIcon from "@mui/icons-material/Payments";
+import GuideSection from "./components/GuideSection";
 
 function App() {
   const [invoices, setInvoices] = useState([]);
@@ -25,6 +34,8 @@ function App() {
       }
     };
     loadInvoices();
+    const interval = setInterval(loadInvoices, 5000);
+    return () => clearInterval(interval);
   }, []);
 
   const handlePayment = async (invoiceId, paymentAmount) => {
@@ -77,34 +88,57 @@ function App() {
   const handleCloseError = () => setError(null);
 
   return (
-    <Container maxWidth="md">
-      <Typography variant="h4" align="center" gutterBottom>
-        Invoice Manager
-      </Typography>
+    <Box display="flex" justifyContent="space-between" alignItems="flex-start">
+      <div>
+        <Container maxWidth="md">
+          <AppBar position="sticky" color="primary">
+            <Toolbar>
+              <Container maxWidth="md">
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  width="100%"
+                >
+                  <Typography variant="h4" align="center">
+                    Invoice Manager
+                  </Typography>
+                  <PaymentsIcon fontSize="large" sx={{ marginLeft: "8px" }} />
+                </Box>
+              </Container>
+            </Toolbar>
+          </AppBar>
 
-      <ErrorDialog
-        open={Boolean(error)}
-        message={error}
-        onClose={handleCloseError}
-      />
+          <ErrorDialog
+            open={Boolean(error)}
+            message={error}
+            onClose={handleCloseError}
+          />
 
-      <Paper elevation={3} sx={{ p: 3, mt: 4 }}>
-        <Box display="flex" flexDirection="row" justifyContent="space-between">
-          <div style={{ flex: 1, marginRight: "16px" }}>
-            <AddInvoiceForm onAddInvoice={handleAddInvoice} />
-          </div>
-          <div style={{ flex: 1 }}>
-            <InvoiceSelector
-              invoices={invoices}
-              selectedInvoice={selectedInvoice}
-              onSelect={setSelectedInvoice}
-              onPayment={handlePayment} // Pass the payment handler
-            />
-          </div>
-        </Box>
-      </Paper>
-      <InvoiceList invoices={invoices} onPayment={handlePayment} />
-    </Container>
+          <Paper elevation={3} sx={{ p: 3, mt: 4 }}>
+            <Box
+              display="flex"
+              flexDirection="row"
+              justifyContent="space-between"
+            >
+              <div style={{ flex: 1, marginRight: "16px" }}>
+                <AddInvoiceForm onAddInvoice={handleAddInvoice} />
+              </div>
+              <div style={{ flex: 1 }}>
+                <InvoiceSelector
+                  invoices={invoices}
+                  selectedInvoice={selectedInvoice}
+                  onSelect={setSelectedInvoice}
+                  onPayment={handlePayment} // Pass the payment handler
+                />
+              </div>
+            </Box>
+          </Paper>
+          <InvoiceList invoices={invoices} onPayment={handlePayment} />
+        </Container>
+      </div>
+      <GuideSection />
+    </Box>
   );
 }
 
