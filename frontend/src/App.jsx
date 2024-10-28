@@ -88,7 +88,13 @@ function App() {
   const handleCloseError = () => setError(null);
 
   return (
-    <Box display="flex" justifyContent="space-between" alignItems="flex-start">
+    <Box
+      display="flex"
+      justifyContent="space-between"
+      alignItems="flex-start"
+      width="100vw"
+      sx={{ padding: 2, boxSizing: "border-box" }}
+    >
       <div>
         <Container maxWidth="md">
           <AppBar position="sticky" color="primary">
@@ -129,7 +135,7 @@ function App() {
                   invoices={invoices}
                   selectedInvoice={selectedInvoice}
                   onSelect={setSelectedInvoice}
-                  onPayment={handlePayment} // Pass the payment handler
+                  onPayment={handlePayment}
                 />
               </div>
             </Box>

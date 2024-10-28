@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { TextField, Button, Grid, Box, Typography } from "@mui/material";
+import { TextField, Button, Box, Typography } from "@mui/material";
+import { Grid2 as Grid } from "@mui/material";
 
 function AddInvoiceForm({ onAddInvoice }) {
   const [newInvoice, setNewInvoice] = useState({
