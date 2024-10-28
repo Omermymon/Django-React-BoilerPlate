@@ -10,6 +10,7 @@ const GuideSection = () => {
       maxWidth="400px"
       mx="auto"
       p={2}
+      padding={8}
     >
       <Typography variant="h6" gutterBottom>
         Invoice Management App UI Guide

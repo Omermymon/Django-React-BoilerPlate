@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { TextField, Button, Box, Typography } from "@mui/material";
-import { Grid2 as Grid } from "@mui/material";
 
 function AddInvoiceForm({ onAddInvoice }) {
   const [newInvoice, setNewInvoice] = useState({
@@ -20,8 +19,8 @@ function AddInvoiceForm({ onAddInvoice }) {
       <Typography variant="h6" mb={1}>
         Add New Invoice
       </Typography>
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={6}>
+      <Box display="flex" flexDirection="column" spacing={2}>
+        <Box mb={2}>
           <TextField
             label="Reference"
             fullWidth
@@ -31,8 +30,8 @@ function AddInvoiceForm({ onAddInvoice }) {
               setNewInvoice({ ...newInvoice, reference: e.target.value })
             }
           />
-        </Grid>
-        <Grid item xs={12} sm={6}>
+        </Box>
+        <Box mb={2}>
           <TextField
             label="Amount"
             type="number"
@@ -46,8 +45,8 @@ function AddInvoiceForm({ onAddInvoice }) {
               })
             }
           />
-        </Grid>
-        <Grid item xs={12}>
+        </Box>
+        <Box mb={2}>
           <TextField
             label="Due Date"
             type="date"
@@ -59,8 +58,8 @@ function AddInvoiceForm({ onAddInvoice }) {
               setNewInvoice({ ...newInvoice, due_date: e.target.value })
             }
           />
-        </Grid>
-      </Grid>
+        </Box>
+      </Box>
       <Button type="submit" variant="contained" sx={{ mt: 3 }} fullWidth>
         Add Invoice
       </Button>

@@ -95,7 +95,7 @@ function App() {
       width="100vw"
       sx={{ padding: 2, boxSizing: "border-box" }}
     >
-      <div>
+      <div style={{ width: "70vw" }}>
         <Container maxWidth="md">
           <AppBar position="sticky" color="primary">
             <Toolbar>
